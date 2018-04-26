@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const firebase = require('firebase-admin');
 const client = new Discord.Client();
 var waiting = false;
+var firstUpdate = true;
 var currentSong = {
   id: 'undefined',
   artist: 'undefined',
@@ -25,7 +26,9 @@ var secondary = firebase.initializeApp({
 }, 'secondary');
 client.on('ready', () => {
     primary.firestore().collection('logs').doc('0').onSnapshot(doc => {
-      log(doc.data().title, doc.data().description, doc.data().color, doc.data().fields);
+      if (firstUpdate) {firstUpdate = false} else {
+        log(doc.data().title, doc.data().description, doc.data().color, doc.data().fields);
+      }
     }, error => {
       console.log(error);
     });

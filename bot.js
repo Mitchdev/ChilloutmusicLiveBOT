@@ -46,6 +46,7 @@ client.on('message', message => {
 });
 
 function log(title, description, fields) {
+  console.log(title)
   client.channels.get('438921855965855745').sendEmbed({
     "embed": {
       "color": 3381181,
@@ -54,8 +55,6 @@ function log(title, description, fields) {
       "description": description,
       "fields": fields
     }
-  }).then(function(err) {
-    console.log(err);
   });
 }
 

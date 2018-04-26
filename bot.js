@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const firebase = require('firebase-admin');
 const client = new Discord.Client();
-const currentSong = {artist:'undefined',title:'undefined'}
+const currentSongTitle = 'undefined';
 firebase.initializeApp({
   credential: firebase.credential.cert({
     projectId: 'mdhomepage-74632',
@@ -12,8 +12,10 @@ firebase.initializeApp({
 });
 client.on('ready', () => {
     firebase.firestore().collection('options').doc('settings').onSnapshot(doc => {
-      console.log(doc.data().song);
-      
+      if (doc.data().song.title !== currentSongTitle) {
+        currentSongTitle = doc.data().song.title;
+        client.user.setPresence({game:{name:doc.data().song.artist+' - '+doc.data().song.title},status:'online'}).then(console.log).catch(console.error);
+      }
     }, error => {
       console.log(error);
     });

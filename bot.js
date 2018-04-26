@@ -28,17 +28,9 @@ client.on('ready', () => {
         client.user.setPresence({game:{name:doc.data().song.artist+' - '+doc.data().song.title},status:'dnd'}).then(console.log).catch(console.error);
       }
       if (doc.data().skip == 'true') {
-        client.channels.get('438921855965855745').sendEmbed({
-          "embed": {
-            "color": 3381181,
-            "timestamp": new Date(),
-            "title": doc.data().skippedBy+" skipped the current song",
-            "description": "["+currentSong.artist+" - "+currentSong.title+"](https://youtu.be/"+currentSong.id+")",
-            "fields": [{
-                "name": "Now Playing",
-                "value": "["+doc.data().song.artist+" - "+doc.data().song.title+"](https://youtu.be/"+doc.data().song.id+")"
-              }]
-          }
+        log(doc.data().skippedBy+" skipped the current song","["+currentSong.artist+" - "+currentSong.title+"](https://youtu.be/"+currentSong.id+")",{
+          "name":"Now Playing",
+          "value":"["+doc.data().song.artist+" - "+doc.data().song.title+"](https://youtu.be/"+doc.data().song.id+")"
         });
       }
       currentSong.id = doc.data().song.id;
@@ -52,5 +44,19 @@ client.on('ready', () => {
 client.on('message', message => {
   console.log(message.content);
 });
+
+function log(title, description, fields) {
+  client.channels.get('438921855965855745').sendEmbed({
+    "embed": {
+      "color": 3381181,
+      "timestamp": new Date(),
+      "title": title,
+      "description": description,
+      "fields": fields
+    }
+  }).then(function(err) {
+    console.log(err);
+  });
+}
 
 client.login(process.env.BOT_TOKEN);

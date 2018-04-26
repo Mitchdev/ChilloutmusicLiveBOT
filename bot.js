@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const firebase = require('firebase-admin');
-const serviceAccount = require(process.env.SERVICE_ACCOUNT_URL);
+const serviceAccount = require('https://mitchdev.net/m/admin/dashboard/mdhomepage-74632-firebase-adminsdk-ynfwk-317d08f61d.json');
 const client = new Discord.Client();
 firebase.initializeApp(serviceAccount);
 client.on('ready', () => {

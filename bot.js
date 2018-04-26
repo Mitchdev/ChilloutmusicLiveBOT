@@ -24,11 +24,16 @@ var secondary = firebase.initializeApp({
   databaseURL: 'https://chilloutmusiclive-a8271.firebaseio.com'
 }, 'secondary');
 client.on('ready', () => {
+    primary.firestore().collection('logs').doc('0').onSnapshot(doc => {
+      log(doc.data().title, doc.data().description, doc.data().color, doc.data().fields);
+    }, error => {
+      console.log(error);
+    });
     primary.firestore().collection('options').doc('settings').onSnapshot(doc => {
       if (doc.data().song.id == 'undefined') {currentSong = doc.data().song}
       if (waiting) {
         waiting = false;
-        log(doc.data().song.skippedBy+" skipped the current song","["+currentSong.artist+" - "+currentSong.title+"](https://youtu.be/"+currentSong.id+")",[{
+        log(doc.data().song.skippedBy+" skipped the current song", "["+currentSong.artist+" - "+currentSong.title+"](https://youtu.be/"+currentSong.id+")", 3381181, [{
           "name":"Now Playing",
           "value":"["+doc.data().song.artist+" - "+doc.data().song.title+"](https://youtu.be/"+doc.data().song.id+")"
         }]);
@@ -40,14 +45,12 @@ client.on('ready', () => {
       console.log(error);
     });
 });
-
 client.on('message', message => {
   console.log(message.content);
 });
-
-function log(title, description, fields) {
+function log(title, description, color, fields) {
   var embed = new Discord.RichEmbed({
-    "color": 3381181,
+    "color": color,
     "timestamp": new Date(),
     "title": title,
     "description": description,
@@ -57,5 +60,4 @@ function log(title, description, fields) {
     console.log(error);
   });
 }
-
 client.login(process.env.BOT_TOKEN);

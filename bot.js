@@ -1,7 +1,11 @@
 const Discord = require('discord.js');
 const firebase = require('firebase-admin');
 const client = new Discord.Client();
-var currentSongTitle = 'undefined';
+var currentSong = {
+  id: 'undefined',
+  artist: 'undefined',
+  title: 'undefined',
+}
 var primary = firebase.initializeApp({
   credential: firebase.credential.cert({
     projectId: 'mdhomepage-74632',
@@ -20,10 +24,26 @@ var secondary = firebase.initializeApp({
 }, 'secondary');
 client.on('ready', () => {
     primary.firestore().collection('options').doc('settings').onSnapshot(doc => {
-      if (doc.data().song.title !== currentSongTitle) {
-        currentSongTitle = doc.data().song.title;
+      if (doc.data().song.id !== currentSong.id) {
         client.user.setPresence({game:{name:doc.data().song.artist+' - '+doc.data().song.title},status:'dnd'}).then(console.log).catch(console.error);
       }
+      if (doc.data().skip == 'true') {
+        client.channels.get('438921855965855745').sendEmbed({
+          "embed": {
+            "color": 3381181,
+            "timestamp": new Date(),
+            "title": doc.data().skippedBy+" skipped the current song",
+            "description": "["+currentSong.artist+" - "+currentSong.title+"](https://youtu.be/"+currentSong.id+")",
+            "fields": [{
+                "name": "Now Playing",
+                "value": "["+doc.data().song.artist+" - "+doc.data().song.title+"](https://youtu.be/"+doc.data().song.id+")"
+              }]
+          }
+        });
+      }
+      currentSong.id = doc.data().song.id;
+      currentSong.artist = doc.data().song.artist;
+      currentSong.title = doc.data().song.title;
     }, error => {
       console.log(error);
     });

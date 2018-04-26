@@ -24,16 +24,17 @@ var secondary = firebase.initializeApp({
 }, 'secondary');
 client.on('ready', () => {
     primary.firestore().collection('options').doc('settings').onSnapshot(doc => {
+      if (doc.data().song.id == 'undefined') {
+        currentSong = doc.data().song;
+      }
       client.user.setPresence({game:{name:doc.data().song.artist+' - '+doc.data().song.title},status:'dnd'}).then(console.log).catch(console.error);
       if (doc.data().song.skip == 'true') {
-        log(doc.data().skippedBy+" skipped the current song","["+currentSong.artist+" - "+currentSong.title+"](https://youtu.be/"+currentSong.id+")",[{
+        log(doc.data().song.skippedBy+" skipped the current song","["+currentSong.artist+" - "+currentSong.title+"](https://youtu.be/"+currentSong.id+")",[{
           "name":"Now Playing",
           "value":"["+doc.data().song.artist+" - "+doc.data().song.title+"](https://youtu.be/"+doc.data().song.id+")"
         }]);
       }
-      currentSong.id = doc.data().song.id;
-      currentSong.artist = doc.data().song.artist;
-      currentSong.title = doc.data().song.title;
+      currentSong = doc.data().song;
     }, error => {
       console.log(error);
     });

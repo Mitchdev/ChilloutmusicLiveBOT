@@ -5,7 +5,7 @@ firebase.initializeApp({
   credential: firebase.credential.cert({
     projectId: 'mdhomepage-74632',
     clientEmail: 'firebase-adminsdk-ynfwk@mdhomepage-74632.iam.gserviceaccount.com',
-    privateKey: '-----BEGIN PRIVATE KEY-----\n317d08f61da448dfdf032b6883e9d75e1e4acc11\n-----END PRIVATE KEY-----\n'
+    privateKey: JSON.parse(process.env.SERVICE_KEY)
   }),
   databaseURL: 'https://mdhomepage-74632.firebaseio.com'
 });

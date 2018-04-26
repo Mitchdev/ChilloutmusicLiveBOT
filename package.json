@@ -1,0 +1,13 @@
+{
+  "name": "ChilloutmusicLiveBOT",
+  "description": "CMLive Discord Bot",
+  "version": "0.0.1",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "discord.js": "11.3.2",
+    "request": "2.85.0"
+  }
+}

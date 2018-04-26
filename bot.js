@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const firebase = require('firebase-admin');
 const client = new Discord.Client();
+const currentSong = {artist:'undefined',title:'undefined'}
 firebase.initializeApp({
   credential: firebase.credential.cert({
     projectId: 'mdhomepage-74632',
@@ -10,10 +11,12 @@ firebase.initializeApp({
   databaseURL: 'https://mdhomepage-74632.firebaseio.com'
 });
 client.on('ready', () => {
-    firebase.firestore().collection('options').doc('settings').get().then(doc => {
-      if (doc.exists) {console.log('Document data:', doc.data().song);} else {console.log('No such document!');}
-    }).catch(err => {console.log('Error getting document', err);});
-    client.user.setPresence({game: { name: 'Jon Kuwada - Cherry Cola' }, status: 'idle' }).then(console.log).catch(console.error);
+    firebase.firestore().collection('options').doc('settings').onSnapshot(doc => {
+      console.log(doc.data().song);
+      
+    }, error => {
+      console.log(error);
+    });
 });
 
 client.on('message', message => {

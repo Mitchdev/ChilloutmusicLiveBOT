@@ -51,7 +51,9 @@ function log(title, description, fields) {
     "description": description,
     "fields": fields
   });
-  client.channels.get('438921855965855745').sendEmbed(embed);
+  client.channels.get('438921855965855745').sendEmbed(embed).catch(error => {
+    console.log(error);
+  });
 }
 
 client.login(process.env.BOT_TOKEN);

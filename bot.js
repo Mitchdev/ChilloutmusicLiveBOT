@@ -44,15 +44,14 @@ client.on('message', message => {
 });
 
 function log(title, description, fields) {
-  client.channels.get('438921855965855745').sendEmbed({
-    "embed": {
-      "color": 3381181,
-      "timestamp": new Date(),
-      "title": title,
-      "description": description,
-      "fields": fields
-    }
+  var embed = new Discord.RichEmbed({
+    "color": 3381181,
+    "timestamp": new Date(),
+    "title": title,
+    "description": description,
+    "fields": fields
   });
+  client.channels.get('438921855965855745').sendEmbed(embed);
 }
 
 client.login(process.env.BOT_TOKEN);

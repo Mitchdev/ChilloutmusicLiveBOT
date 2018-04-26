@@ -25,7 +25,7 @@ var secondary = firebase.initializeApp({
   databaseURL: 'https://chilloutmusiclive-a8271.firebaseio.com'
 }, 'secondary');
 client.on('ready', () => {
-    primary.firestore().collection('logs').doc('0').onSnapshot(doc => {
+    secondary.firestore().collection('logs').doc('0').onSnapshot(doc => {
       if (firstUpdate) {firstUpdate = false} else {
         log(doc.data().title, doc.data().description, doc.data().color, doc.data().fields);
       }

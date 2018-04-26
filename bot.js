@@ -26,7 +26,6 @@ var secondary = firebase.initializeApp({
 client.on('ready', () => {
     primary.firestore().collection('options').doc('settings').onSnapshot(doc => {
       if (doc.data().song.id == 'undefined') {currentSong = doc.data().song}
-      if (doc.data().song.skip == 'true') {waiting = true}
       if (waiting) {
         waiting = false;
         log(doc.data().song.skippedBy+" skipped the current song","["+currentSong.artist+" - "+currentSong.title+"](https://youtu.be/"+currentSong.id+")",[{
@@ -34,6 +33,7 @@ client.on('ready', () => {
           "value":"["+doc.data().song.artist+" - "+doc.data().song.title+"](https://youtu.be/"+doc.data().song.id+")"
         }]);
       }
+      if (doc.data().song.skip == 'true') {waiting = true}
       client.user.setPresence({game:{name:doc.data().song.artist+' - '+doc.data().song.title},status:'dnd'}).then(console.log).catch(console.error);
       currentSong = doc.data().song;
     }, error => {

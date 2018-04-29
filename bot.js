@@ -26,31 +26,23 @@ var secondary = firebase.initializeApp({
 }, 'secondary');
 client.on('ready', () => {
     secondary.firestore().collection('logs').doc('0').onSnapshot(doc => {
-      if (firstUpdate) {firstUpdate = false} else {
-        log(doc.data().title, doc.data().description, doc.data().color, doc.data().fields);
-      }
-    }, error => {
-      console.log(error);
-    });
+      if (firstUpdate) {firstUpdate = false} else {log(doc.data().title, doc.data().description, doc.data().color, doc.data().fields)}
+    }, error => {console.log(error)});
     primary.firestore().collection('options').doc('settings').onSnapshot(doc => {
       if (doc.data().song.id == 'undefined') {currentSong = doc.data().song}
       if (waiting) {
         waiting = false;
-        log(doc.data().song.skippedBy+" skipped the current song", "["+currentSong.artist+" - "+currentSong.title+"](https://youtu.be/"+currentSong.id+")", 3381181, [{
-          "name":"Now Playing",
-          "value":"["+doc.data().song.artist+" - "+doc.data().song.title+"](https://youtu.be/"+doc.data().song.id+")"
-        }]);
+        log(doc.data().song.skippedBy+" skipped the current song","["+currentSong.artist+" - "+currentSong.title+"](https://youtu.be/"+currentSong.id+")",3381181,null);
+      }
+      if (currentSong.id !== doc.data().song.id) {
+        log("Now Playing","["+doc.data().song.artist+" - "+doc.data().song.title+"](https://youtu.be/"+doc.data().song.id+")",3381181,null);
       }
       if (doc.data().song.skip == 'true') {waiting = true}
-      client.user.setPresence({game:{name:doc.data().song.artist+' - '+doc.data().song.title},status:'dnd'}).then(console.log).catch(console.error);
+      client.user.setPresence({game:{name:doc.data().song.artist+' - '+doc.data().song.title},status:'online'}).then(console.log).catch(console.error);
       currentSong = doc.data().song;
-    }, error => {
-      console.log(error);
-    });
+    }, error => {console.log(error)});
 });
-client.on('message', message => {
-  console.log(message.content);
-});
+client.on('message', message => {console.log(message.content)});
 function log(title, description, color, fields) {
   var embed = new Discord.RichEmbed({
     "color": color,
@@ -59,8 +51,6 @@ function log(title, description, color, fields) {
     "description": description,
     "fields": fields
   });
-  client.channels.get('438921855965855745').sendEmbed(embed).catch(error => {
-    console.log(error);
-  });
+  client.channels.get('438921855965855745').sendEmbed(embed).catch(error => {console.log(error)});
 }
 client.login(process.env.BOT_TOKEN);

@@ -39,13 +39,12 @@ client.on('ready', () => {
       if (currentSong.id !== doc.data().song.id) {
         timeleft = doc.data().song.duration;
         interval = setInterval(function () {
-          console.log(timeleft);
-          timeleft = timeleft - 10;
+          timeleft = timeleft - 1;
           client.user.setPresence({
             game: {name:doc.data().song.artist+' - '+doc.data().song.title+' ('+('0' + Math.floor(timeleft / (60 * 60))).slice(-2)+':'+('0' + Math.floor(timeleft % (60 * 60) / 60)).slice(-2)+':'+('0' + Math.ceil(timeleft % (60 * 60) % 60)).slice(-2)+')'},
             status:'online'
           }).then(console.log).catch(console.error);
-        }, 10000);
+        }, 1000);
         log("Now Playing","["+doc.data().song.artist+" - "+doc.data().song.title+"](https://youtu.be/"+doc.data().song.id+")",3381181,null);
       }
       if (doc.data().song.skip == 'true') {waiting = true}

@@ -38,6 +38,7 @@ client.on('ready', () => {
       }
       if (currentSong.id !== doc.data().song.id) {
         timeleft = doc.data().song.duration;
+        clearInterval(interval);
         interval = setInterval(function () {
           timeleft = timeleft - 5;
           client.user.setPresence({
@@ -51,7 +52,7 @@ client.on('ready', () => {
       currentSong = doc.data().song;
     }, error => {console.log(error)});
 });
-client.on('message', message => {console.log(message.content)});
+//client.on('message', message => {console.log(message.content)});
 function log(title, description, color, fields) {
   var embed = new Discord.RichEmbed({
     "color": color,

@@ -44,7 +44,7 @@ client.on('ready', () => {
             game: {name:doc.data().song.artist+' - '+doc.data().song.title+' ('+('0' + Math.floor(timeleft / (60 * 60))).slice(-2)+':'+('0' + Math.floor(timeleft % (60 * 60) / 60)).slice(-2)+':'+('0' + Math.ceil(timeleft % (60 * 60) % 60)).slice(-2)+')'},
             status:'online'
           }).then(console.log).catch(console.error);
-        }, 1000);
+        }, 5000);
         log("Now Playing","["+doc.data().song.artist+" - "+doc.data().song.title+"](https://youtu.be/"+doc.data().song.id+")",3381181,null);
       }
       if (doc.data().song.skip == 'true') {waiting = true}

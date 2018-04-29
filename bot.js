@@ -39,7 +39,7 @@ client.on('ready', () => {
       if (currentSong.id !== doc.data().song.id) {
         timeleft = doc.data().song.duration;
         interval = setInterval(function () {
-          timeleft = timeleft - 1;
+          timeleft = timeleft - 5;
           client.user.setPresence({
             game: {name:doc.data().song.artist+' - '+doc.data().song.title+' ('+('0' + Math.floor(timeleft / (60 * 60))).slice(-2)+':'+('0' + Math.floor(timeleft % (60 * 60) / 60)).slice(-2)+':'+('0' + Math.ceil(timeleft % (60 * 60) % 60)).slice(-2)+')'},
             status:'online'

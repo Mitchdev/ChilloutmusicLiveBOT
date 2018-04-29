@@ -2,8 +2,6 @@ const Discord = require('discord.js');
 const firebase = require('firebase-admin');
 const client = new Discord.Client();
 var waiting = false;
-var interval = null;
-var timeleft = 3600;
 var firstUpdate = true;
 var currentSong = {
   id: 'undefined',
@@ -37,15 +35,7 @@ client.on('ready', () => {
         log(doc.data().song.skippedBy+" skipped the current song","["+currentSong.artist+" - "+currentSong.title+"](https://youtu.be/"+currentSong.id+")",3381181,null);
       }
       if (currentSong.id !== doc.data().song.id) {
-        timeleft = doc.data().song.duration;
-        clearInterval(interval);
-        interval = setInterval(function () {
-          timeleft = timeleft - 10;
-          client.user.setPresence({
-            game: {name:doc.data().song.artist+' - '+doc.data().song.title+' ('+('0' + Math.floor(timeleft / (60 * 60))).slice(-2)+':'+('0' + Math.floor(timeleft % (60 * 60) / 60)).slice(-2)+':'+('0' + Math.ceil(timeleft % (60 * 60) % 60)).slice(-2)+')'},
-            status:'online'
-          }).catch(console.error);
-        }, 10000);
+        client.user.setPresence({game:{name:doc.data().song.artist+' - '+doc.data().song.title},status:'online'}).catch(console.error);
         log("Now Playing","["+doc.data().song.artist+" - "+doc.data().song.title+"](https://youtu.be/"+doc.data().song.id+")",3381181,null);
       }
       if (doc.data().song.skip == 'true') {waiting = true}

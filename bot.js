@@ -34,7 +34,7 @@ client.on('ready', () => {
         waiting = false;
         log(doc.data().song.skippedBy+" skipped the current song","["+currentSong.artist+" - "+currentSong.title+"](https://youtu.be/"+currentSong.id+")",3381181,null);
       }
-      if (currentSong.id !== doc.data().song.id) {
+      if (currentSong.id !== doc.data().song.id && !firstUpdate) {
         client.user.setPresence({game:{name:doc.data().song.artist+' - '+doc.data().song.title},status:'online'}).catch(console.error);
         log("Now Playing","["+doc.data().song.artist+" - "+doc.data().song.title+"](https://youtu.be/"+doc.data().song.id+")",3381181,null);
       }
@@ -42,7 +42,14 @@ client.on('ready', () => {
       currentSong = doc.data().song;
     }, error => {console.log(error)});
 });
-//client.on('message', message => {console.log(message.content)});
+client.on('message', message => {
+  if (message.content.startsWith('!makeuser')) {
+    const args = message.content.split(' ').shift().toLowerCase();
+    console.log(message.content);
+    console.log(args);
+    if (!args || args.length !== 4) {}
+  }
+});
 function log(title, description, color, fields) {
   var embed = new Discord.RichEmbed({
     "color": color,

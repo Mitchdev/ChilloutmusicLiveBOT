@@ -66,15 +66,13 @@ client.on('message', message => {
         password: "password",
         displayName: args[2]
       }).then(function(user) {
-          console.log(message.mentions);
-          console.log(message.mentions.members);
-          console.log(message.mentions.members.id);
+          console.log(message.mentions.members.user.id)
           primary.firestore().collection('users').doc(user.uid).set({
             disabled: 'false',
           	admin: 'false',
           	email: args[1],
           	uid: user.uid,
-            discord: message.mentions.members.id,
+            discord: message.mentions.members.user.id,
           	username: args[2]
           }).then(function() {
             message.mentions.members.send('Please set a password for your account '+args[2]+' ('+args[1]+')\n`!setpassword '+user.id+' <password> <confirm-password>`');

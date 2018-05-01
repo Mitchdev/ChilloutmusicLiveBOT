@@ -45,18 +45,22 @@ client.on('ready', () => {
 client.on('message', message => {
   if (message.content.startsWith('!setpassword') && message.channel.type == 'dm') {
     const args = message.content.split(' ');
-    if (args && args.length == 4) {
-      if (args[2] == args[3]) {
-        if (args[2].length > 6) {
-          primary.firestore().collection('users').doc(args[1]).get().then(function(doc) {
-            if (doc.exists && message.author.id == doc.data().discord) {
-              primary.auth().updateUser(doc.data().uid, {password: args[2]}).then(function() {
-                  message.reply('Successfully set password to '+args[2]+'\nYou are now able to login: https://mitchdev.net/m/admin/dashboard/login');
+    if (args && args.length == 3) {
+      if (args[1] == args[2]) {
+        if (args[1].length > 6) {
+          primary.firestore().collection('users').doc(message.author.id).get().then(function(doc) {
+            if (doc.exists) {
+              primary.auth().updateUser(doc.data().uid, {password: args[1]}).then(function() {
+                primary.firestore().collection('users').doc(doc.data().uid).set(doc.data()).then(function() {
+                  primary.firestore().collection('users').doc(message.author.id).delete().then(function() {
+                    message.reply('Successfully set password to '+args[1]+'\nYou are now able to login: https://mitchdev.net/m/admin/dashboard/login');
+                  }).catch(function(error) {message.reply(error.message)});
                 }).catch(function(error) {message.reply(error.message)});
+              }).catch(function(error) {message.reply(error.message)});
             } else {message.reply('Incorrect user identification')}
           }).catch(function(error) {message.reply(error.message)});
         } else {message.reply('Password must be at least 6 characters long')}
-      } else {message.reply('Please use correct format: `!setpassword '+user.id+' <password> <confirm-password>`')}
+      } else {message.reply('Please use correct format: `!setpassword <password> <confirm-password>`')}
     } else {message.reply('Passwords do not match')}
   }
   if (message.content.startsWith('!makeuser') && message.author.id == '399186129288560651') {
@@ -68,7 +72,7 @@ client.on('message', message => {
         password: "password",
         displayName: args[2]
       }).then(function(user) {
-          primary.firestore().collection('users').doc(user.uid).set({
+          primary.firestore().collection('users').doc(message.mentions.users.first().id).set({
             disabled: 'false',
           	admin: 'false',
           	email: user.email,
@@ -76,9 +80,8 @@ client.on('message', message => {
             discord: message.mentions.users.first().id,
           	username: user.displayName
           }).then(function() {
-            message.mentions.users.first().send('Please set a password for your account '+user.displayName+' ('+user.email+')\n`!setpassword '+user.uid+' <password> <confirm-password>`');
+            message.mentions.users.first().send('Please set a password for your account '+user.displayName+' ('+user.email+')\n`!setpassword <password> <confirm-password>`');
           	message.reply('Successfully created the user '+user.displayName);
-            message.delete();
           }).catch(function(error) {message.reply(error.message)});
 			}).catch(function(error) {message.reply(error.message)});
     } else {message.reply('Please use correct format: `!makeuser <email> <username> <@discordUsername>`')}

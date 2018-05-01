@@ -43,11 +43,43 @@ client.on('ready', () => {
     }, error => {console.log(error)});
 });
 client.on('message', message => {
-  if (message.content.startsWith('!makeuser')) {
-    const args = message.content.split(' ').shift().toLowerCase();
-    console.log(message.content);
-    console.log(args);
-    if (!args || args.length !== 4) {}
+  if (message.content.startsWith('!setpassword') && message.channel.type == 'dm') {
+    const args = message.content.split(' ');
+    if (args && args.length == 4) {
+        if (args[2] == args[3]) {
+        primary.firestore().collection('users').doc(args[1]).get().then(function(doc) {
+          if (doc.exists && message.author.id == doc.data().discord) {
+            primary.auth().updateUser(doc.data().uid, {password: args[2]}).then(function() {
+                message.reply('Successfully set password to '+args[2]+'\nYou are now able to login: https://mitchdev.net/m/admin/dashboard/login');
+              }).catch(function(error) {message.reply(error.message)});
+          } else {message.reply('Incorrect user identification')}
+        }).catch(function(error) {message.reply(error.message)});
+      } else {message.reply('Please use correct format: `!setpassword '+user.id+' <password> <confirm-password>`')}
+    } else {message.reply('Passwords do not match')}
+  }
+  if (message.content.startsWith('!makeuser') && message.author.id == '399186129288560651') {
+    const args = message.content.split(' ');
+    if (args && args.length == 4 && message.mentions.members) {
+      primary.auth().createUser({
+        email: args[1],
+        emailVerified: true,
+        password: "password",
+        displayName: args[2]
+      }).then(function(user) {
+          primary.firestore().collection('users').doc(user.uid).set({
+            disabled: 'false',
+          	admin: 'false',
+          	email: args[1],
+          	uid: user.uid,
+            discord: message.mentions.members.id,
+          	username: args[2]
+          }).then(function() {
+            message.mentions.members.send('Please set a password for your account '+args[2]+' ('+args[1]+')\n`!setpassword '+user.id+' <password> <confirm-password>`');
+          	message.reply('Successfully created the user '+args[2]);
+            message.delete();
+          }).catch(function(error) {message.reply(error.message)});
+			}).catch(function(error) {message.reply(error.message)});
+    } else {message.reply('Please use correct format: `!makeuser <email> <username> <@discordUsername>`')}
   }
 });
 function log(title, description, color, fields) {

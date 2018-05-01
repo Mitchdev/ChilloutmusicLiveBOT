@@ -74,7 +74,7 @@ client.on('message', message => {
             discord: message.mentions.users.first().id,
           	username: user.displayName
           }).then(function() {
-            message.mentions.members.send('Please set a password for your account '+user.displayName+' ('+user.email+')\n`!setpassword '+user.id+' <password> <confirm-password>`');
+            message.mentions.users.first().send('Please set a password for your account '+user.displayName+' ('+user.email+')\n`!setpassword '+user.id+' <password> <confirm-password>`');
           	message.reply('Successfully created the user '+user.displayName);
             message.delete();
           }).catch(function(error) {message.reply(error.message)});

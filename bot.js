@@ -60,12 +60,14 @@ client.on('message', message => {
   if (message.content.startsWith('!makeuser') && message.author.id == '399186129288560651') {
     const args = message.content.split(' ');
     if (args && args.length == 4 && message.mentions.members) {
-      primary.auth().createUser({
+      var data = {
         email: args[1],
         emailVerified: true,
         password: "password",
         displayName: args[2]
-      }).then(function(user) {
+      }
+      console.log(data);
+      primary.auth().createUser(data).then(function(user) {
           primary.firestore().collection('users').doc(user.uid).set({
             disabled: 'false',
           	admin: 'false',

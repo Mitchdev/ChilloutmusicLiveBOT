@@ -66,10 +66,9 @@ client.on('message', message => {
         password: "password",
         displayName: args[2]
       }).then(function(user) {
-          console.log(args[1]);
-          console.log(user.uid);
+          console.log(message.mentions);
+          console.log(message.mentions.members);
           console.log(message.mentions.members.id);
-          console.log(args[2]);
           primary.firestore().collection('users').doc(user.uid).set({
             disabled: 'false',
           	admin: 'false',

@@ -46,14 +46,16 @@ client.on('message', message => {
   if (message.content.startsWith('!setpassword') && message.channel.type == 'dm') {
     const args = message.content.split(' ');
     if (args && args.length == 4) {
-        if (args[2] == args[3]) {
-        primary.firestore().collection('users').doc(args[1]).get().then(function(doc) {
-          if (doc.exists && message.author.id == doc.data().discord) {
-            primary.auth().updateUser(doc.data().uid, {password: args[2]}).then(function() {
-                message.reply('Successfully set password to '+args[2]+'\nYou are now able to login: https://mitchdev.net/m/admin/dashboard/login');
-              }).catch(function(error) {message.reply(error.message)});
-          } else {message.reply('Incorrect user identification')}
-        }).catch(function(error) {message.reply(error.message)});
+      if (args[2] == args[3]) {
+        if (args[2].length > 6) {
+          primary.firestore().collection('users').doc(args[1]).get().then(function(doc) {
+            if (doc.exists && message.author.id == doc.data().discord) {
+              primary.auth().updateUser(doc.data().uid, {password: args[2]}).then(function() {
+                  message.reply('Successfully set password to '+args[2]+'\nYou are now able to login: https://mitchdev.net/m/admin/dashboard/login');
+                }).catch(function(error) {message.reply(error.message)});
+            } else {message.reply('Incorrect user identification')}
+          }).catch(function(error) {message.reply(error.message)});
+        }
       } else {message.reply('Please use correct format: `!setpassword '+user.id+' <password> <confirm-password>`')}
     } else {message.reply('Passwords do not match')}
   }
@@ -74,7 +76,7 @@ client.on('message', message => {
             discord: message.mentions.users.first().id,
           	username: user.displayName
           }).then(function() {
-            message.mentions.users.first().send('Please set a password for your account '+user.displayName+' ('+user.email+')\n`!setpassword '+user.id+' <password> <confirm-password>`');
+            message.mentions.users.first().send('Please set a password for your account '+user.displayName+' ('+user.email+')\n`!setpassword '+user.uid+' <password> <confirm-password>`');
           	message.reply('Successfully created the user '+user.displayName);
             message.delete();
           }).catch(function(error) {message.reply(error.message)});

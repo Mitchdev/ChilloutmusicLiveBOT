@@ -53,7 +53,7 @@ client.on('message', message => {
               primary.auth().updateUser(doc.data().uid, {password: args[1]}).then(function() {
                 primary.firestore().collection('users').doc(doc.data().uid).set(doc.data()).then(function() {
                   primary.firestore().collection('users').doc(message.author.id).delete().then(function() {
-                    message.reply('Successfully set password to '+args[1]+'\nYou are now able to login: https://mitchdev.net/m/admin/dashboard/login');
+                    message.reply('Successfully set password for your account to '+args[1]+'\nYou are now able to login: https://mitchdev.net/m/admin/dashboard/login');
                   }).catch(function(error) {message.reply(error.message)});
                 }).catch(function(error) {message.reply(error.message)});
               }).catch(function(error) {message.reply(error.message)});

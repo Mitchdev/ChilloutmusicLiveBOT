@@ -55,7 +55,7 @@ client.on('message', message => {
                 }).catch(function(error) {message.reply(error.message)});
             } else {message.reply('Incorrect user identification')}
           }).catch(function(error) {message.reply(error.message)});
-        }
+        } else {message.reply('Password must be at least 6 characters long')}
       } else {message.reply('Please use correct format: `!setpassword '+user.id+' <password> <confirm-password>`')}
     } else {message.reply('Passwords do not match')}
   }

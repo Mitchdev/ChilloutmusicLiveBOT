@@ -117,3 +117,4 @@ function log(title, description, color, fields) {
   client.channels.get('438921855965855745').send(embed).catch(error => {console.log(error)});
 }
 client.login(process.env.BOT_TOKEN);
+process.on('unhandledRejection', error => console.log(`Uncaught Promise Rejection:\n$(error)`))

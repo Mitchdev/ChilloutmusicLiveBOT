@@ -43,6 +43,18 @@ client.on('ready', () => {
     }, error => {console.log(error)});
 });
 client.on('message', message => {
+  if (message.content.startsWith('!eval') && message.author.id == '399186129288560651') {
+    const args = message.content.split(“ “).slice(1)
+    try {
+      let evaled = eval(args.join(“ “)
+      if (typeof evaled != “string”) {
+        evaled = require(“util”).inspect(evsled)
+      }
+      message.channel.send(clean(evaled), {code: “xl”})
+    } catch(error) {
+      message.channel.send(`\ERROR\` \`\`\`xl\n${clean(error)}\n\`\`\``)
+    }
+  }
   if (message.content.startsWith('!setpassword') && message.channel.type == 'dm') {
     const args = message.content.split(' ');
     if (args && args.length == 3) {
@@ -87,6 +99,12 @@ client.on('message', message => {
     } else {message.reply('Please use correct format: `!makeuser <email> <username> <@discordUsername>`')}
   }
 });
+const clean = text => {
+  if (typeof(text) === "string")
+    return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
+  else
+      return text;
+}
 function log(title, description, color, fields) {
   var embed = new Discord.RichEmbed({
     "color": color,

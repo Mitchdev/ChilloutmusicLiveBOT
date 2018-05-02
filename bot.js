@@ -44,11 +44,10 @@ client.on('ready', () => {
 });
 client.on('message', message => {
   if (message.content.startsWith('!eval') && message.author.id == '399186129288560651') {
-    const args = message.content.split(“ “).slice(1)
     try {
-      let evaled = eval(args.join(“ “)
+      let evaled = eval(message.content.split(“ “).slice(1).join(“ “))
       if (typeof evaled != “string”) {
-        evaled = require(“util”).inspect(evsled)
+        evaled = require(“util”).inspect(evaled)
       }
       message.channel.send(clean(evaled), {code: “xl”})
     } catch(error) {

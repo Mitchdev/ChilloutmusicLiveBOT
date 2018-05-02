@@ -45,7 +45,7 @@ client.on('ready', () => {
 client.on('message', message => {
   if (message.content.startsWith('!eval') && message.author.id == '399186129288560651') {
     try {
-      let evaled = eval(message.content.split(“ “).slice(1).join(“ “))
+      let evaled = eval(message.content.split(“ “).slice(1).join(“ “));
       if (typeof evaled != “string”) {
         evaled = require(“util”).inspect(evaled)
       }

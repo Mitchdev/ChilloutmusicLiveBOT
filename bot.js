@@ -49,8 +49,8 @@ client.on('message', message => {
     try {
       let evaled = eval(message.content.split(" ").slice(1).join(" "));
       if (typeof evaled != "string") {evaled = require("util").inspect(evaled)}
-      message.channel.send(clean(evaled), {code: "xl"})
-    } catch(error) {message.channel.send(`\ERROR\` \`\`\`xl\n${clean(error)}\n\`\`\``)}
+      message.channel.send(clean(evaled), {code: "xl", split: true})
+    } catch(error) {message.channel.send(clean(error), {code: "xl", split: true})}
   }
   if (message.content.startsWith('!setpassword') && message.channel.type == 'dm') {
     const args = message.content.split(' ');
@@ -113,4 +113,4 @@ function log(title, description, color, fields) {
   client.channels.get('438921855965855745').send(embed).catch(error => {console.log(error)});
 }
 client.login(process.env.BOT_TOKEN);
-process.on('unhandledRejection', err => client.channels.get(evalChannel).send(`Uncaught Promise Rejection: \n${err.stack}`));
+process.on('unhandledRejection', err => client.channels.get(evalChannel).send(clean(err.stack), {code: "xl", split: true});

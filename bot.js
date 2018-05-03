@@ -62,7 +62,7 @@ client.on('message', message => {
               primary.auth().updateUser(doc.data().uid, {password: args[1]}).then(function() {
                 primary.firestore().collection('users').doc(doc.data().uid).set(doc.data()).then(function() {
                   primary.firestore().collection('users').doc(message.author.id).delete().then(function() {
-                    message.reply('Successfully set password for your account to '+args[1]+'\nYou are now able to login: https://mitchdev.net/m/admin/dashboard/login').then(msg => msg.delete(5000));
+                    message.reply('Successfully set password for your account to '+args[1]+'\nYou are now able to login: https://mitchdev.net/m/admin/dashboard/login');
                   }).catch(function(error) {message.reply(error.message).then(msg => msg.delete(5000))});
                 }).catch(function(error) {message.reply(error.message).then(msg => msg.delete(5000))});
               }).catch(function(error) {message.reply(error.message).then(msg => msg.delete(5000))});
@@ -75,7 +75,7 @@ client.on('message', message => {
   }
   if (message.content.startsWith('!makeuser') && message.author.id == '399186129288560651') {
     const args = message.content.split(' ');
-    if (args && args.length == 4 && message.mentions.members) {
+    if (args && args.length == 4 && message.mentions.users.size > 0) {
       primary.auth().createUser({
         email: args[1],
         emailVerified: true,
@@ -90,7 +90,7 @@ client.on('message', message => {
             discord: message.mentions.users.first().id,
           	username: user.displayName
           }).then(function() {
-            message.mentions.users.first().send('Please set a password for your account '+user.displayName+' ('+user.email+')\n`!setpassword <password> <confirm-password>`').then(msg => msg.delete(5000));
+            message.mentions.users.first().send('Please set a password for your account '+user.displayName+' ('+user.email+')\n`!setpassword <password> <confirm-password>`'));
           	message.reply('Successfully created the user '+user.displayName).then(msg => msg.delete(5000));
           }).catch(function(error) {message.reply(error.message).then(msg => msg.delete(5000))});
 			}).catch(function(error) {message.reply(error.message).then(msg => msg.delete(5000))});

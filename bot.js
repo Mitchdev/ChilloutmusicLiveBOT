@@ -34,7 +34,7 @@ client.on('ready', () => {
         waiting = false;
         log(doc.data().song.skippedBy+" skipped the current song","["+currentSong.artist+" - "+currentSong.title+"](https://youtu.be/"+currentSong.id+")",3381181,null);
       }
-      if (currentSong.id !== doc.data().song.id && !firstUpdate) {
+      if (currentSong.id !== doc.data().song.id) {
         client.user.setPresence({game:{name:doc.data().song.artist+' - '+doc.data().song.title},status:'online'}).catch(console.error);
         log("Now Playing","["+doc.data().song.artist+" - "+doc.data().song.title+"](https://youtu.be/"+doc.data().song.id+")",3381181,null);
       }
@@ -44,17 +44,11 @@ client.on('ready', () => {
 });
 client.on('message', message => {
   if (message.content.startsWith('!eval') && message.author.id == '399186129288560651') {
-    const args = message.content.split(" ").slice(1);
     try {
-      const code = args.join(" ");
-      let evaled = eval(code);
-      if (typeof evaled != "string") {
-        evaled = require("util").inspect(evaled)
-      }
+      let evaled = eval(message.content.split(" ").slice(1).join(" "));
+      if (typeof evaled != "string") {evaled = require("util").inspect(evaled)}
       message.channel.send(clean(evaled), {code: "xl"})
-    } catch(error) {
-      message.channel.send(`\ERROR\` \`\`\`xl\n${clean(error)}\n\`\`\``)
-    }
+    } catch(error) {message.channel.send(`\ERROR\` \`\`\`xl\n${clean(error)}\n\`\`\``)}
   }
   if (message.content.startsWith('!setpassword') && message.channel.type == 'dm') {
     const args = message.content.split(' ');
@@ -117,4 +111,4 @@ function log(title, description, color, fields) {
   client.channels.get('438921855965855745').send(embed).catch(error => {console.log(error)});
 }
 client.login(process.env.BOT_TOKEN);
-process.on('unhandledRejection', error => console.log(`Uncaught Promise Rejection:\n$(error)`))
+process.on('unhandledRejection', err => console.error(`Uncaught Promise Rejection: \n${err.stack}`));

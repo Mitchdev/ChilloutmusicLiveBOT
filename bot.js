@@ -3,6 +3,7 @@ const firebase = require('firebase-admin');
 const client = new Discord.Client();
 var waiting = false;
 var firstUpdate = true;
+var evalChannel = '438921855965855745';
 var currentSong = {
   id: 'undefined',
   artist: 'undefined',
@@ -44,6 +45,7 @@ client.on('ready', () => {
 });
 client.on('message', message => {
   if (message.content.startsWith('!eval') && message.author.id == '399186129288560651') {
+    evalChannel = message.channel.id;
     try {
       let evaled = eval(message.content.split(" ").slice(1).join(" "));
       if (typeof evaled != "string") {evaled = require("util").inspect(evaled)}
@@ -111,4 +113,4 @@ function log(title, description, color, fields) {
   client.channels.get('438921855965855745').send(embed).catch(error => {console.log(error)});
 }
 client.login(process.env.BOT_TOKEN);
-process.on('unhandledRejection', err => console.error(`Uncaught Promise Rejection: \n${err.stack}`));
+process.on('unhandledRejection', err => client.channels.get(evalChannel).send(`Uncaught Promise Rejection: \n${err.stack}`));

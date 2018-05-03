@@ -113,4 +113,4 @@ function log(title, description, color, fields) {
   client.channels.get('438921855965855745').send(embed).catch(error => {console.log(error)});
 }
 client.login(process.env.BOT_TOKEN);
-process.on('unhandledRejection', err => client.channels.get(evalChannel).send(clean(err.stack), {code: "xl", split: true});
+process.on('unhandledRejection', err => client.channels.get(evalChannel).send(clean(err.stack), {code: "xl", split: true}));

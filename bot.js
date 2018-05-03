@@ -90,7 +90,7 @@ client.on('message', message => {
             discord: message.mentions.users.first().id,
           	username: user.displayName
           }).then(function() {
-            message.mentions.users.first().send('Please set a password for your account '+user.displayName+' ('+user.email+')\n`!setpassword <password> <confirm-password>`'));
+            message.mentions.users.first().send('Please set a password for your account '+user.displayName+' ('+user.email+')\n`!setpassword <password> <confirm-password>`');
           	message.reply('Successfully created the user '+user.displayName).then(msg => msg.delete(5000));
           }).catch(function(error) {message.reply(error.message).then(msg => msg.delete(5000))});
 			}).catch(function(error) {message.reply(error.message).then(msg => msg.delete(5000))});

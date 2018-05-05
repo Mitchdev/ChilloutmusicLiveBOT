@@ -71,7 +71,6 @@ client.on('message', message => {
         } else {message.reply('Password must be at least 6 characters long').then(msg => msg.delete(5000))}
       } else {message.reply('Please use correct format: `!setpassword <password> <confirm-password>`').then(msg => msg.delete(5000))}
     } else {message.reply('Passwords do not match').then(msg => msg.delete(5000))}
-    message.delete(5000)
   }
   if (message.content.startsWith('!makeuser') && message.author.id == '399186129288560651') {
     const args = message.content.split(' ');
@@ -83,17 +82,17 @@ client.on('message', message => {
         displayName: args[2]
       }).then(function(user) {
           primary.firestore().collection('users').doc(message.mentions.users.first().id).set({
-            disabled: 'false',
-          	admin: 'false',
-          	email: user.email,
-          	uid: user.uid,
+            disabled: false,
+            admin: false,
+            email: user.email,
+            uid: user.uid,
             discord: message.mentions.users.first().id,
-          	username: user.displayName
+            username: user.displayName
           }).then(function() {
             message.mentions.users.first().send('Please set a password for your account '+user.displayName+' ('+user.email+')\n`!setpassword <password> <confirm-password>`');
-          	message.reply('Successfully created the user '+user.displayName).then(msg => msg.delete(5000));
+            message.reply('Successfully created the user '+user.displayName).then(msg => msg.delete(5000));
           }).catch(function(error) {message.reply(error.message).then(msg => msg.delete(5000))});
-			}).catch(function(error) {message.reply(error.message).then(msg => msg.delete(5000))});
+      }).catch(function(error) {message.reply(error.message).then(msg => msg.delete(5000))});
     } else {message.reply('Please use correct format: `!makeuser <email> <username> <@discordUsername>`').then(msg => msg.delete(5000))}
     message.delete(5000);
   }
